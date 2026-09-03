@@ -10,6 +10,13 @@ public class PlayersJoin : NetworkBehaviour
     public bool IsConnected => NetworkManager!.IsClient || NetworkManager!.IsServer;
     public int PlayerCount => playerCount.Value;
     readonly NetworkVariable<int> playerCount = new();
+    
+    /*public bool IsReady => isReady.Value;
+    readonly NetworkVariable<bool> isReady = new(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server);*/
+    
     public PaddleSide paddleSide;
 
     // public SessionManager sessionManager;
@@ -73,6 +80,7 @@ public class PlayersJoin : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         if (!IsServer) return;
+        if (!IsOwner) return;
         
         UpdatePlayerCount();
         NetworkManager.OnConnectionEvent += HandleConnectionEvent;
