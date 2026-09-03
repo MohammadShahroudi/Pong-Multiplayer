@@ -11,7 +11,7 @@ public class PlayersJoin : NetworkBehaviour
     public int PlayerCount => playerCount.Value;
     readonly NetworkVariable<int> playerCount = new();
     public GameManager gameManager;
-    
+    // public Paddle
 
     public string LocalRole
     {
@@ -25,7 +25,7 @@ public class PlayersJoin : NetworkBehaviour
         }
     }
     
-    private void Awake()
+    /*private void Awake()
     {
         Button leftButton = hostButton.GetComponent<Button>(); 
         Button rightButton = clientButton.GetComponent<Button>();
@@ -49,12 +49,13 @@ public class PlayersJoin : NetworkBehaviour
             Debug.Log("Client Button clicked");
             gameManager.StartGame();
         });
-    }
+    }*/
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         if (!IsServer) return;
+        
 
         UpdatePlayerCount();
         NetworkManager.OnConnectionEvent += HandleConnectionEvent;
