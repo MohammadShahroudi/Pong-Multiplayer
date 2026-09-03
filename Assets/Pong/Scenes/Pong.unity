@@ -2356,9 +2356,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayersJoin
   ShowTopMostFoldoutHeaderGroup: 1
-  hostButton: {fileID: 106550600}
-  clientButton: {fileID: 1483414517}
-  gameManager: {fileID: 1677812269}
 --- !u!1 &1677812267
 GameObject:
   m_ObjectHideFlags: 0

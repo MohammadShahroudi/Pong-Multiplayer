@@ -6,11 +6,13 @@ using System.Collections;
 
 public class PlayersJoin : NetworkBehaviour
 {
-    public Button hostButton, clientButton;
+    // public Button hostButton, clientButton;
     public bool IsConnected => NetworkManager!.IsClient || NetworkManager!.IsServer;
     public int PlayerCount => playerCount.Value;
     readonly NetworkVariable<int> playerCount = new();
-    public GameManager gameManager;
+
+    // public SessionManager sessionManager;
+    // public GameManager gameManager;
     // public Paddle
 
     public string LocalRole
@@ -25,31 +27,32 @@ public class PlayersJoin : NetworkBehaviour
         }
     }
     
-    /*private void Awake()
+    private void Awake()
     {
-        Button leftButton = hostButton.GetComponent<Button>(); 
-        Button rightButton = clientButton.GetComponent<Button>();
+        // Button leftButton = hostButton.GetComponent<Button>(); 
+        // Button rightButton = clientButton.GetComponent<Button>();
         
         // host is assigned the left paddle
         // After the host button is clicked then the 
         // host button disappears and the left paddle appears
-        leftButton.onClick.AddListener(() => 
-        {
-            hostButton.gameObject.SetActive(false);
-            Debug.Log("Host Button clicked");
-        });
+        // leftButton.onClick.AddListener(() => 
+        // {
+        //     hostButton.gameObject.SetActive(false);
+        //     Debug.Log("Host Button clicked");
+        // });
 
         // client is assigned the right paddle
         // after the client button is clicked then 
         // the client button disappears and the right paddle appears
         // and the game starts too 
-        rightButton.onClick.AddListener(() =>
-        {
-            clientButton.gameObject.SetActive(false);
-            Debug.Log("Client Button clicked");
-            gameManager.StartGame();
-        });
-    }*/
+        // rightButton.onClick.AddListener(() =>
+        // {
+        //     clientButton.gameObject.SetActive(false);
+        //     Debug.Log("Client Button clicked");
+        //     gameManager.StartGame();
+        // });
+        
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -69,6 +72,10 @@ public class PlayersJoin : NetworkBehaviour
         NetworkManager.OnConnectionEvent -= HandleConnectionEvent;
         playerCount.Value = 0;
     }
+    
+    public void StartHost() => NetworkManager!.StartHost();
+    
+    public void StartClient() => NetworkManager!.StartClient();
 
     private void HandleConnectionEvent(NetworkManager networkManager, ConnectionEventData eventData)
     {
@@ -79,5 +86,6 @@ public class PlayersJoin : NetworkBehaviour
     private void UpdatePlayerCount()
     {
         playerCount.Value = NetworkManager.ConnectedClientsIds.Count;
+        Debug.Log("Player Value: " + playerCount.Value);
     }
 }

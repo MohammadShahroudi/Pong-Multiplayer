@@ -26,7 +26,18 @@ public class SessionManager : MonoBehaviour
         // Hide Host/Client until you are ready to wire the session.
         sessionUI.gameObject.SetActive(false);
         
-        startHostButton.onClick.AddListener(() => Debug.Log("TODO: Start Host"));
-        startClientButton.onClick.AddListener(() => Debug.Log("TODO: Start Client"));
+        //startHostButton.onClick.AddListener(() => Debug.Log("TODO: Start Host"));
+        // startClientButton.onClick.AddListener(() => Debug.Log("TODO: Start Client"));
+        
+        startHostButton.onClick.AddListener(() =>
+        {
+            startHostButton.gameObject.SetActive(false);
+        });
+        
+        startClientButton.onClick.AddListener(() =>
+        {
+            startClientButton.gameObject.SetActive(false);
+            gameManager.StartGame();
+        });
     }
 }
