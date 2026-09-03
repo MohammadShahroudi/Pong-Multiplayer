@@ -10,6 +10,7 @@ public class PlayersJoin : NetworkBehaviour
     public bool IsConnected => NetworkManager!.IsClient || NetworkManager!.IsServer;
     public int PlayerCount => playerCount.Value;
     readonly NetworkVariable<int> playerCount = new();
+    public PaddleSide paddleSide;
 
     // public SessionManager sessionManager;
     public GameManager gameManager;
@@ -40,9 +41,10 @@ public class PlayersJoin : NetworkBehaviour
         leftButton.onClick.AddListener(() => 
         {
             hostButton.gameObject.SetActive(false);
+            Debug.Log("Host Button clicked");
+            paddleSide = PaddleSide.Left;
             playerCount.Value++;
             Debug.Log("Player Count: " + playerCount.Value);
-            Debug.Log("Host Button clicked");
         });
 
         // client is assigned the right paddle
@@ -54,13 +56,14 @@ public class PlayersJoin : NetworkBehaviour
         {
             clientButton.gameObject.SetActive(false);
             Debug.Log("Client Button clicked");
+            paddleSide = PaddleSide.Right;
             playerCount.Value++;
             Debug.Log("Player Count: " + playerCount.Value);
 
             if (playerCount.Value == 2)
             {
                 Debug.Log("Start Game!");
-                gameManager.StartGame();
+                // gameManager.StartGame();
             }
         });
         // Debug.Log("Hi");
