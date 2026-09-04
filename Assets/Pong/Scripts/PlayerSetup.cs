@@ -20,7 +20,7 @@ public class PlayersJoin : NetworkBehaviour
     public PaddleSide paddleSide;
 
     // public SessionManager sessionManager;
-    public GameManager gameManager;
+    // public GameManager gameManager;
     // public Paddle
 
     public string LocalRole
@@ -39,7 +39,7 @@ public class PlayersJoin : NetworkBehaviour
     {
         Button leftButton = hostButton.GetComponent<Button>(); 
         Button rightButton = clientButton.GetComponent<Button>();
-        Debug.Log("Player Count: " + playerCount.Value);
+        // Debug.Log("Player Count: " + playerCount.Value);
         
         // host is assigned the left paddle
         // increment the player count by one
@@ -50,8 +50,8 @@ public class PlayersJoin : NetworkBehaviour
             hostButton.gameObject.SetActive(false);
             Debug.Log("Host Button clicked");
             paddleSide = PaddleSide.Left;
-            playerCount.Value++;
-            Debug.Log("Player Count: " + playerCount.Value);
+            // playerCount.Value++;
+            // Debug.Log("Player Count: " + playerCount.Value);
         });
 
         // client is assigned the right paddle
@@ -64,12 +64,12 @@ public class PlayersJoin : NetworkBehaviour
             clientButton.gameObject.SetActive(false);
             Debug.Log("Client Button clicked");
             paddleSide = PaddleSide.Right;
-            playerCount.Value++;
-            Debug.Log("Player Count: " + playerCount.Value);
+            // playerCount.Value++;
+            // Debug.Log("Player Count: " + playerCount.Value);
 
             if (playerCount.Value == 2)
             {
-                Debug.Log("Start Game!");
+                // Debug.Log("Start Game!");
                 // gameManager.StartGame();
             }
         });
@@ -103,11 +103,11 @@ public class PlayersJoin : NetworkBehaviour
     {
         Debug.Assert(IsServer);
         UpdatePlayerCount();
+        Debug.Log("Player Value: " + playerCount.Value);
     }
 
     private void UpdatePlayerCount()
     {
         playerCount.Value = NetworkManager.ConnectedClientsIds.Count;
-        Debug.Log("Player Value: " + playerCount.Value);
     }
 }
