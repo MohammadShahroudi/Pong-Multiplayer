@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +9,7 @@ using UnityEngine.UI;
  * references mark where you will start a Host or Client session.
  */
 
-public class SessionManager : MonoBehaviour
+public class SessionManager : NetworkBehaviour
 {
     [Header("Multiplayer")]
     [SerializeField] GameManager gameManager;
@@ -17,30 +18,56 @@ public class SessionManager : MonoBehaviour
     [SerializeField] NetworkManager networkManager;
 
     [Header("Multiplayer UI")]
-    [SerializeField] Button startHostButton;
-    [SerializeField] Button startClientButton;
     [SerializeField] Canvas sessionUI;
 
-    void Awake()
+    public bool IsConnected => NetworkManager!.IsClient || NetworkManager!.IsServer;
+    public int PlayerCount => playerCount.Value;
+
+    public string LocalRole
     {
-        // Hide Host/Client until you are ready to wire the session.
-        // sessionUI.gameObject.SetActive(false);
+        get
+        {
+            if (NetworkManager!.IsHost) return "Host";
+            if (NetworkManager!.IsServer) return "Server";
+            if (NetworkManager!.IsClient) return "Client";
+            
+            return "Disconnected";
+        }
+    }
+    
+    readonly NetworkVariable<int> playerCount = new();
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (!IsServer) return;
+        if (!IsOwner) return;
         
-        //startHostButton.onClick.AddListener(() => Debug.Log("TODO: Start Host"));
-        // startClientButton.onClick.AddListener(() => Debug.Log("TODO: Start Client"));
+        UpdatePlayerCount();
+        NetworkManager.OnConnectionEvent += HandleConnectionEvent;
+    }
+    
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        if (!NetworkManager!.IsServer) return;
         
-        // startHostButton.onClick.AddListener(() =>
-        // {
-        //     startHostButton.gameObject.SetActive(false);
-        //     Debug.Log("Host Button clicked");
-        //     
-        // });
-        //
-        // startClientButton.onClick.AddListener(() =>
-        // {
-        //     startClientButton.gameObject.SetActive(false);
-        //     Debug.Log("Client Button clicked");
-        //     gameManager.StartGame();
-        // });
+        NetworkManager.OnConnectionEvent -= HandleConnectionEvent;
+        playerCount.Value = 0;
+    }
+    
+    public void StartHost() => NetworkManager!.StartHost();
+    public void StartClient() => NetworkManager!.StartClient();
+
+    private void HandleConnectionEvent(NetworkManager networkManager, ConnectionEventData eventData)
+    {
+        Debug.Assert(IsServer);
+        UpdatePlayerCount();
+        Debug.Log("Player Value: " + playerCount.Value);
+    }
+
+    private void UpdatePlayerCount()
+    {
+        playerCount.Value = NetworkManager.ConnectedClientsIds.Count;
     }
 }

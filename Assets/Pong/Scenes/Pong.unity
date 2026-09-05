@@ -2275,8 +2275,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1567325795}
-  - component: {fileID: 1567325796}
   - component: {fileID: 1567325797}
+  - component: {fileID: 1567325796}
   - component: {fileID: 1567325798}
   m_Layer: 0
   m_Name: Session Manager
@@ -2312,10 +2312,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3227241d9baa7c4a92269473acbe6bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SessionManager
+  ShowTopMostFoldoutHeaderGroup: 1
   gameManager: {fileID: 1677812269}
   networkManager: {fileID: 303099171}
-  startHostButton: {fileID: 106550600}
-  startClientButton: {fileID: 1483414517}
   sessionUI: {fileID: 427943453}
 --- !u!114 &1567325797
 MonoBehaviour:
@@ -2355,10 +2354,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aba0000b9e5714194bb95344d1663aea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayersJoin
-  ShowTopMostFoldoutHeaderGroup: 1
-  hostButton: {fileID: 106550600}
-  clientButton: {fileID: 1483414517}
-  gameManager: {fileID: 1677812269}
+  sessionManager: {fileID: 1567325796}
+  startHostButton: {fileID: 106550600}
+  startClientButton: {fileID: 1483414517}
+  paddleSide: 0
 --- !u!1 &1677812267
 GameObject:
   m_ObjectHideFlags: 0
