@@ -11,7 +11,10 @@ using UnityEngine;
 
 public class GameManager : NetworkBehaviour
 {
-    private readonly NetworkVariable<int> leftPlayerScore = new();
+    private readonly NetworkVariable<int> leftPlayerScore = new(0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+        );
     
     readonly NetworkVariable<int> rightPlayerScore = new(0,
         NetworkVariableReadPermission.Everyone,
@@ -28,11 +31,11 @@ public class GameManager : NetworkBehaviour
 
     const int ScoreToWin = 11;
 
-    void Start()
+    /*void Start()
     {
         UpdateScore();
         StartGame();
-    }
+    }*/
 
     public void StartGame()
     {
@@ -67,8 +70,8 @@ public class GameManager : NetworkBehaviour
 
         UpdateScore();
     }
-
-    void UpdateScore()
+    
+    public void UpdateScore()
     {
         rightPlayerScoreText.text = _rightPlayerScore.ToString();
         leftPlayerScoreText.text = _leftPlayerScore.ToString();

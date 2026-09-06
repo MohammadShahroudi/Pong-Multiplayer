@@ -13,6 +13,7 @@ public class SessionManager : NetworkBehaviour
 {
     [Header("Multiplayer")]
     [SerializeField] GameManager gameManager;
+    public PaddleSide paddleSide;
     
     // This does not already exist in the scene, you need to add it and reference it
 
@@ -37,8 +38,6 @@ public class SessionManager : NetworkBehaviour
     }
     
     readonly NetworkVariable<int> playerCount = new();
-    
-    public PaddleSide paddleSide;
 
     private void Awake()
     {
@@ -50,7 +49,7 @@ public class SessionManager : NetworkBehaviour
         startHostButton.onClick.AddListener(() =>
         {
             startHostButton.gameObject.SetActive(false);
-            // sessionManager.StartHost();
+            NetworkManager.StartHost();
             Debug.Log("Host Button clicked");
             paddleSide = PaddleSide.Left;
 
@@ -64,7 +63,7 @@ public class SessionManager : NetworkBehaviour
         startClientButton.onClick.AddListener(() =>
         {
             startClientButton.gameObject.SetActive(false);
-            // sessionManager.StartClient();
+            NetworkManager.StartClient();
             Debug.Log("Client Button clicked");
             paddleSide = PaddleSide.Right;
         });
@@ -73,6 +72,13 @@ public class SessionManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        
+        name = $"Player {NetworkObject.OwnerClientId}";
+        
+        Debug.Log(
+            $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
+            $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
+        
         if (!IsServer) return;
         // if (!IsOwner) return;
         
@@ -91,6 +97,7 @@ public class SessionManager : NetworkBehaviour
     
     public void StartHost() => NetworkManager!.StartHost();
     public void StartClient() => NetworkManager!.StartClient();
+    // public void Disconnect() => NetworkManager!.Shutdown();
 
     private void HandleConnectionEvent(NetworkManager networkManager, ConnectionEventData eventData)
     {
@@ -100,7 +107,9 @@ public class SessionManager : NetworkBehaviour
         
         if (playerCount.Value == 2)
         {
-            
+            Debug.Log("Both players have been connected!");
+            gameManager.UpdateScore();
+            gameManager.StartGame();
         }
     }
 
