@@ -52,35 +52,34 @@ public class SessionManager : NetworkBehaviour
             NetworkManager.StartHost();
             Debug.Log("Host Button clicked");
             paddleSide = PaddleSide.Left;
-
-            // client is assigned the right paddle
-            // increment the player count by one
-            // after the client button is clicked then 
-            // the client button disappears and the right paddle appears
-            // and the game starts too 
+            
         });
         
+        // client is assigned the right paddle
+        // increment the player count by one
+        // after the client button is clicked then 
+        // the client button disappears and the right paddle appears
+        // and the game starts too 
         startClientButton.onClick.AddListener(() =>
         {
-            startClientButton.gameObject.SetActive(false);
+            // startClientButton.gameObject.SetActive(false);
             NetworkManager.StartClient();
             Debug.Log("Client Button clicked");
             paddleSide = PaddleSide.Right;
+            
         });
     }
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        if (!IsServer) return;
         
         name = $"Player {NetworkObject.OwnerClientId}";
         
         Debug.Log(
             $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
             $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
-        
-        if (!IsServer) return;
-        // if (!IsOwner) return;
         
         UpdatePlayerCount();
         NetworkManager.OnConnectionEvent += HandleConnectionEvent;
@@ -108,6 +107,8 @@ public class SessionManager : NetworkBehaviour
         if (playerCount.Value == 2)
         {
             Debug.Log("Both players have been connected!");
+            // startHostButton.gameObject.SetActive(false);
+            startClientButton.gameObject.SetActive(false);
             gameManager.UpdateScore();
             gameManager.StartGame();
         }

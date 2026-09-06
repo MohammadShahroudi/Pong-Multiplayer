@@ -42,7 +42,7 @@ public class GameManager : NetworkBehaviour
         float direction = Random.value < 0.5f ? -1f : 1f;
         ResetBall(direction);
     }
-
+    
     public void OnGoalScored(PaddleSide scoringSide)
     {
         // If the ball entered a goal area, increment the score, check for win, and reset the ball
