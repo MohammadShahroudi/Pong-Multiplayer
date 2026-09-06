@@ -15,10 +15,11 @@ public class SessionManager : NetworkBehaviour
     [SerializeField] GameManager gameManager;
     
     // This does not already exist in the scene, you need to add it and reference it
-    [SerializeField] NetworkManager networkManager;
 
     [Header("Multiplayer UI")]
-    [SerializeField] Canvas sessionUI;
+    [SerializeField] Canvas sessionUI; 
+    [SerializeField] Button startHostButton;
+    [SerializeField] Button startClientButton;
 
     public bool IsConnected => NetworkManager!.IsClient || NetworkManager!.IsServer;
     public int PlayerCount => playerCount.Value;
@@ -36,12 +37,44 @@ public class SessionManager : NetworkBehaviour
     }
     
     readonly NetworkVariable<int> playerCount = new();
+    
+    public PaddleSide paddleSide;
+
+    private void Awake()
+    {
+        // networkManager = FindObjectOfType<NetworkManager>();
+        // host is assigned the left paddle
+        // increment the player count by one
+        // After the host button is clicked then the 
+        // host button disappears and the left paddle appears
+        startHostButton.onClick.AddListener(() =>
+        {
+            startHostButton.gameObject.SetActive(false);
+            // sessionManager.StartHost();
+            Debug.Log("Host Button clicked");
+            paddleSide = PaddleSide.Left;
+
+            // client is assigned the right paddle
+            // increment the player count by one
+            // after the client button is clicked then 
+            // the client button disappears and the right paddle appears
+            // and the game starts too 
+        });
+        
+        startClientButton.onClick.AddListener(() =>
+        {
+            startClientButton.gameObject.SetActive(false);
+            // sessionManager.StartClient();
+            Debug.Log("Client Button clicked");
+            paddleSide = PaddleSide.Right;
+        });
+    }
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         if (!IsServer) return;
-        if (!IsOwner) return;
+        // if (!IsOwner) return;
         
         UpdatePlayerCount();
         NetworkManager.OnConnectionEvent += HandleConnectionEvent;
@@ -64,6 +97,11 @@ public class SessionManager : NetworkBehaviour
         Debug.Assert(IsServer);
         UpdatePlayerCount();
         Debug.Log("Player Value: " + playerCount.Value);
+        
+        if (playerCount.Value == 2)
+        {
+            
+        }
     }
 
     private void UpdatePlayerCount()

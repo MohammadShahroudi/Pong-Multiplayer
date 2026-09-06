@@ -2277,7 +2277,6 @@ GameObject:
   - component: {fileID: 1567325795}
   - component: {fileID: 1567325797}
   - component: {fileID: 1567325796}
-  - component: {fileID: 1567325798}
   m_Layer: 0
   m_Name: Session Manager
   m_TagString: Untagged
@@ -2314,8 +2313,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SessionManager
   ShowTopMostFoldoutHeaderGroup: 1
   gameManager: {fileID: 1677812269}
-  networkManager: {fileID: 303099171}
   sessionUI: {fileID: 427943453}
+  startHostButton: {fileID: 106550600}
+  startClientButton: {fileID: 1483414517}
+  paddleSide: 0
 --- !u!114 &1567325797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2333,31 +2334,15 @@ MonoBehaviour:
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
+  SynchronizeTransform: 0
   m_InScenePlaced: 1
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
+  AutoObjectParentSync: 0
+  SyncOwnerTransformWhenParented: 0
   AllowOwnerToParent: 0
---- !u!114 &1567325798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1567325793}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aba0000b9e5714194bb95344d1663aea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayersJoin
-  sessionManager: {fileID: 1567325796}
-  startHostButton: {fileID: 106550600}
-  startClientButton: {fileID: 1483414517}
-  paddleSide: 0
 --- !u!1 &1677812267
 GameObject:
   m_ObjectHideFlags: 0

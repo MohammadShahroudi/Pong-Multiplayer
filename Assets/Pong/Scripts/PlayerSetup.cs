@@ -1,11 +1,12 @@
-using System;
+/*using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayersJoin : NetworkBehaviour
 {
-    [SerializeField] SessionManager sessionManager;
+    // [SerializeField] SessionManager sessionManager;
+    // [SerializeField] NetworkManager networkManager;
     
     [SerializeField] Button startHostButton;
     [SerializeField] Button startClientButton;
@@ -14,24 +15,18 @@ public class PlayersJoin : NetworkBehaviour
     
     private void Awake()
     {
-        if (sessionManager.IsConnected)
+        // networkManager = FindObjectOfType<NetworkManager>();
+        // host is assigned the left paddle
+        // increment the player count by one
+        // After the host button is clicked then the 
+        // host button disappears and the left paddle appears
+        startHostButton.onClick.AddListener(() =>
         {
-            Debug.Log("Session Manager is connected");
-        }
-        else
-        {
-            // host is assigned the left paddle
-            // increment the player count by one
-            // After the host button is clicked then the 
-            // host button disappears and the left paddle appears
-            startHostButton.onClick.AddListener(() =>
-            {
-                startHostButton.gameObject.SetActive(false);
-                sessionManager.StartHost();
-                Debug.Log("Host Button clicked");
-                paddleSide = PaddleSide.Left;
-            });
-        
+            startHostButton.gameObject.SetActive(false);
+            // sessionManager.StartHost();
+            Debug.Log("Host Button clicked");
+            paddleSide = PaddleSide.Left;
+            
             // client is assigned the right paddle
             // increment the player count by one
             // after the client button is clicked then 
@@ -40,10 +35,10 @@ public class PlayersJoin : NetworkBehaviour
             startClientButton.onClick.AddListener(() =>
             {
                 startClientButton.gameObject.SetActive(false);
-                sessionManager.StartClient();
+                // sessionManager.StartClient();
                 Debug.Log("Client Button clicked");
                 paddleSide = PaddleSide.Right;
             });
-        }
+        });
     }
-}
+}*/
