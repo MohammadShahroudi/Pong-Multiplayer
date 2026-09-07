@@ -729,7 +729,7 @@ Transform:
   m_GameObject: {fileID: 303099169}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.64744, y: -0, z: 0.38053}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2313,10 +2313,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SessionManager
   ShowTopMostFoldoutHeaderGroup: 1
   gameManager: {fileID: 1677812269}
+  paddleSide: 0
   sessionUI: {fileID: 427943453}
   startHostButton: {fileID: 106550600}
   startClientButton: {fileID: 1483414517}
-  paddleSide: 0
 --- !u!114 &1567325797
 MonoBehaviour:
   m_ObjectHideFlags: 0

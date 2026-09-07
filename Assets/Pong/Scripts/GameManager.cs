@@ -37,6 +37,7 @@ public class GameManager : NetworkBehaviour
         StartGame();
     }*/
 
+    
     public void StartGame()
     {
         float direction = Random.value < 0.5f ? -1f : 1f;
@@ -67,11 +68,11 @@ public class GameManager : NetworkBehaviour
             else
                 ResetBall(-1f);
         }
-
-        UpdateScore();
+        UpdateScoreRpc();
     }
     
-    public void UpdateScore()
+    [Rpc(SendTo.Server)]
+    public void UpdateScoreRpc()
     {
         rightPlayerScoreText.text = _rightPlayerScore.ToString();
         leftPlayerScoreText.text = _leftPlayerScore.ToString();

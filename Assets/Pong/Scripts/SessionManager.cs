@@ -13,7 +13,7 @@ public class SessionManager : NetworkBehaviour
 {
     [Header("Multiplayer")]
     [SerializeField] GameManager gameManager;
-    public PaddleSide paddleSide;
+    // public PaddleSide paddleSide;
     
     // This does not already exist in the scene, you need to add it and reference it
 
@@ -38,9 +38,11 @@ public class SessionManager : NetworkBehaviour
     }
     
     readonly NetworkVariable<int> playerCount = new();
+    // private readonly NetworkVariable<PaddleSide> paddleSide = new();
 
     private void Awake()
     {
+        PaddleSide playerSide;
         // networkManager = FindObjectOfType<NetworkManager>();
         // host is assigned the left paddle
         // increment the player count by one
@@ -51,8 +53,10 @@ public class SessionManager : NetworkBehaviour
             startHostButton.gameObject.SetActive(false);
             NetworkManager.StartHost();
             Debug.Log("Host Button clicked");
-            paddleSide = PaddleSide.Left;
-            
+            playerSide = PaddleSide.Left;
+            Debug.Log(
+                $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
+                $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
         });
         
         // client is assigned the right paddle
@@ -62,11 +66,13 @@ public class SessionManager : NetworkBehaviour
         // and the game starts too 
         startClientButton.onClick.AddListener(() =>
         {
-            // startClientButton.gameObject.SetActive(false);
+            startClientButton.gameObject.SetActive(false);
             NetworkManager.StartClient();
             Debug.Log("Client Button clicked");
-            paddleSide = PaddleSide.Right;
-            
+            playerSide = PaddleSide.Right;
+            Debug.Log(
+                $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
+                $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
         });
     }
 
@@ -77,10 +83,6 @@ public class SessionManager : NetworkBehaviour
         
         name = $"Player {NetworkObject.OwnerClientId}";
         
-        Debug.Log(
-            $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
-            $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
-        
         UpdatePlayerCount();
         NetworkManager.OnConnectionEvent += HandleConnectionEvent;
     }
@@ -88,6 +90,9 @@ public class SessionManager : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+        
+        // Debug.Log($"[PlayerIdentity] {name} despawned");
+        
         if (!NetworkManager!.IsServer) return;
         
         NetworkManager.OnConnectionEvent -= HandleConnectionEvent;
@@ -108,8 +113,8 @@ public class SessionManager : NetworkBehaviour
         {
             Debug.Log("Both players have been connected!");
             // startHostButton.gameObject.SetActive(false);
-            startClientButton.gameObject.SetActive(false);
-            gameManager.UpdateScore();
+            // startClientButton.gameObject.SetActive(false);
+            gameManager.UpdateScoreRpc();
             gameManager.StartGame();
         }
     }
