@@ -13,7 +13,6 @@ public class SessionManager : NetworkBehaviour
 {
     [Header("Multiplayer")]
     [SerializeField] GameManager gameManager;
-    // public PaddleSide paddleSide;
     
     // This does not already exist in the scene, you need to add it and reference it
 
@@ -66,7 +65,7 @@ public class SessionManager : NetworkBehaviour
         // and the game starts too 
         startClientButton.onClick.AddListener(() =>
         {
-            startClientButton.gameObject.SetActive(false);
+            // startClientButton.gameObject.SetActive(false);
             NetworkManager.StartClient();
             Debug.Log("Client Button clicked");
             playerSide = PaddleSide.Right;
@@ -80,6 +79,8 @@ public class SessionManager : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         if (!IsServer) return;
+        
+        if (!IsOwner) return;
         
         name = $"Player {NetworkObject.OwnerClientId}";
         
@@ -112,13 +113,19 @@ public class SessionManager : NetworkBehaviour
         if (playerCount.Value == 2)
         {
             Debug.Log("Both players have been connected!");
-            // startHostButton.gameObject.SetActive(false);
-            // startClientButton.gameObject.SetActive(false);
+            HideButtonRpc();
+            gameManager.StartGameRpc();
             gameManager.UpdateScoreRpc();
-            gameManager.StartGame();
         }
     }
 
+    [Rpc(SendTo.Everyone)]
+    private void HideButtonRpc()
+    {
+        startHostButton.gameObject.SetActive(false);
+        startClientButton.gameObject.SetActive(false);
+    }
+    
     private void UpdatePlayerCount()
     {
         playerCount.Value = NetworkManager.ConnectedClientsIds.Count;

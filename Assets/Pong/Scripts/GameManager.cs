@@ -11,14 +11,14 @@ using UnityEngine;
 
 public class GameManager : NetworkBehaviour
 {
-    private readonly NetworkVariable<int> leftPlayerScore = new(0,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-        );
+    private readonly NetworkVariable<int> leftPlayerScore = new();
     
     readonly NetworkVariable<int> rightPlayerScore = new(0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
+    
+    public int LeftPlayerScore => leftPlayerScore.Value;
+    public int RightPlayerScore => rightPlayerScore.Value;
     
     [SerializeField] Transform ball;
     [SerializeField] float startSpeed = 3f;
@@ -37,8 +37,8 @@ public class GameManager : NetworkBehaviour
         StartGame();
     }*/
 
-    
-    public void StartGame()
+    [Rpc(SendTo.Everyone)]
+    public void StartGameRpc()
     {
         float direction = Random.value < 0.5f ? -1f : 1f;
         ResetBall(direction);
@@ -71,7 +71,7 @@ public class GameManager : NetworkBehaviour
         UpdateScoreRpc();
     }
     
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Everyone)]
     public void UpdateScoreRpc()
     {
         rightPlayerScoreText.text = _rightPlayerScore.ToString();
