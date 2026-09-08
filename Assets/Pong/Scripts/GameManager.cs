@@ -91,3 +91,39 @@ public class GameManager : NetworkBehaviour
         ballRigidbody.angularVelocity = Vector3.zero;
     }
 }
+
+/*
+*public void OnGoalScored(PaddleSide scoringSide)
+   {
+       // If the ball entered a goal area, increment the score, check for win, and reset the ball
+
+       if (scoringSide == PaddleSide.Left)
+       {
+           leftPlayerScore.Value++;
+           Debug.Log($"Left player scored: {leftPlayerScore.Value}");
+
+           if (leftPlayerScore.Value == ScoreToWin)
+               Debug.Log("Left player wins!");
+           else
+               ResetBall(1f);
+       }
+       else if (scoringSide == PaddleSide.Right)
+       {
+           rightPlayerScore.Value++;
+           Debug.Log($"Right player scored: {rightPlayerScore.Value}");
+
+           if (rightPlayerScore.Value == ScoreToWin)
+               Debug.Log("Right player wins!");
+           else
+               ResetBall(-1f);
+       }
+       UpdateScoreRpc();
+   }
+   
+   [Rpc(SendTo.Everyone)]
+   public void UpdateScoreRpc()
+   {
+       rightPlayerScoreText.text = rightPlayerScore.Value.ToString();
+       leftPlayerScoreText.text = leftPlayerScore.Value.ToString();
+   }
+*/
