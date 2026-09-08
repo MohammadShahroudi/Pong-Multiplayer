@@ -1,6 +1,9 @@
+using System;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Lumin;
+using Random = UnityEngine.Random;
 
 /*
  * GameManager owns the local match rules: scoring, win checks, and ball resets.
@@ -25,7 +28,8 @@ public class GameManager : NetworkBehaviour
     [SerializeField] Vector3 startPosition = new(0f, 0.25f, 0f);
     [SerializeField] TextMeshProUGUI leftPlayerScoreText;
     [SerializeField] TextMeshProUGUI rightPlayerScoreText;
-
+    // [SerializeField] NetworkObject ballPrefab;
+    
     int _leftPlayerScore;
     int _rightPlayerScore;
 
@@ -80,6 +84,7 @@ public class GameManager : NetworkBehaviour
 
     void ResetBall(float directionSign)
     {
+        // if (ballPrefab == null) return;
         // Start the ball within 20 degrees off-center toward direction indicated by directionSign
         directionSign = Mathf.Sign(directionSign);
         Vector3 newVelocity = new Vector3(directionSign, 0f, 0f) * startSpeed;

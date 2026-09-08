@@ -56,6 +56,9 @@ public class SessionManager : NetworkBehaviour
             Debug.Log(
                 $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
                 $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
+            
+            if (!IsOwner) return;
+            playerCount.Value = NetworkManager.ConnectedClientsIds.Count;
         });
         
         // client is assigned the right paddle
