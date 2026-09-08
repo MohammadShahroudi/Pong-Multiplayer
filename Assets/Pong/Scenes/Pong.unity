@@ -2258,7 +2258,6 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0.25, z: 0}
   leftPlayerScoreText: {fileID: 1519522059}
   rightPlayerScoreText: {fileID: 519401554}
-  ballPrefab: {fileID: 0}
 --- !u!114 &1677812270
 MonoBehaviour:
   m_ObjectHideFlags: 0

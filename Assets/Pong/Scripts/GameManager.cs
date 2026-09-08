@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.Lumin;
 using Random = UnityEngine.Random;
@@ -22,8 +23,9 @@ public class GameManager : NetworkBehaviour
     
     public int LeftPlayerScore => leftPlayerScore.Value;
     public int RightPlayerScore => rightPlayerScore.Value;
-    
+
     [SerializeField] Transform ball;
+    // [SerializeField] NetworkTransform ball;
     [SerializeField] float startSpeed = 3f;
     [SerializeField] Vector3 startPosition = new(0f, 0.25f, 0f);
     [SerializeField] TextMeshProUGUI leftPlayerScoreText;
@@ -84,7 +86,7 @@ public class GameManager : NetworkBehaviour
 
     void ResetBall(float directionSign)
     {
-        // if (ballPrefab == null) return;
+        // if (ball == null) return;
         // Start the ball within 20 degrees off-center toward direction indicated by directionSign
         directionSign = Mathf.Sign(directionSign);
         Vector3 newVelocity = new Vector3(directionSign, 0f, 0f) * startSpeed;
@@ -94,6 +96,10 @@ public class GameManager : NetworkBehaviour
         ballRigidbody.position = startPosition;
         ballRigidbody.linearVelocity = newVelocity;
         ballRigidbody.angularVelocity = Vector3.zero;
+        
+        /*Debug.Log(
+            $"[ServerBall] Server spawned ball | ownerClientId={ball.OwnerClientId} | " +
+            $"networkObjectId={ball.NetworkObjectId}");*/
     }
 }
 
