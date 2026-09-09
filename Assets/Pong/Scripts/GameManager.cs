@@ -50,48 +50,60 @@ public class GameManager : NetworkBehaviour
         ResetBall(direction);
     }
     
-    public void OnValueChanged(int previous,  int current) =>  UpdateScore();
+    public void OnScoreChanged(int previous, int current) => UpdateScore();
+    
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        leftPlayerScore.OnValueChanged += OnScoreChanged;
+        rightPlayerScore.OnValueChanged += OnScoreChanged;
+        
+        UpdateScore();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        leftPlayerScore.OnValueChanged -= OnScoreChanged;
+        rightPlayerScore.OnValueChanged -= OnScoreChanged;
+        
+        base.OnNetworkDespawn();
+    }
+    
     
     public void OnGoalScored(PaddleSide scoringSide)
     {
         // If the ball entered a goal area, increment the score, check for win, and reset the ball
-        
+        if (!IsServer) return;
         
         if (scoringSide == PaddleSide.Left)
         {
-            _leftPlayerScore++;
-            Debug.Log($"Left player scored: {_leftPlayerScore}");
+            leftPlayerScore.Value++;
+            Debug.Log($"Left player scored: {leftPlayerScore.Value}");
 
-            if (_leftPlayerScore == ScoreToWin)
+            if (leftPlayerScore.Value == ScoreToWin)
                 Debug.Log("Left player wins!");
             else
                 ResetBall(1f);
         }
         else if (scoringSide == PaddleSide.Right)
         {
-            _rightPlayerScore++;
-            Debug.Log($"Right player scored: {_rightPlayerScore}");
+            rightPlayerScore.Value++;
+            Debug.Log($"Right player scored: {rightPlayerScore.Value}");
 
-            if (_rightPlayerScore == ScoreToWin)
+            if (rightPlayerScore.Value == ScoreToWin)
                 Debug.Log("Right player wins!");
             else
                 ResetBall(-1f);
         }
-        UpdateScore();
+        // UpdateScore();
     }
     
     // [Rpc(SendTo.Everyone)]
     public void UpdateScore()
     {
-        rightPlayerScoreText.text = _rightPlayerScore.ToString();
-        leftPlayerScoreText.text = _leftPlayerScore.ToString();
-    }
-    
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        
-        // _leftPlayerScore += OnValueChanged();
+        rightPlayerScoreText.text = rightPlayerScore.Value.ToString();
+        leftPlayerScoreText.text = leftPlayerScore.Value.ToString();
     }
     
     void ResetBall(float directionSign)
