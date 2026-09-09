@@ -137,17 +137,17 @@ public class SessionManager : NetworkBehaviour
 
     void AssignSpawnSlot()
     {
-        PaddleSide playerSide;
-        if (IsHost)
+        // PaddleSide playerSide;
+        if (IsOwner)
         {
-            playerSide = PaddleSide.Left;
+            // playerSide = PaddleSide.Left;
             leftPaddle.gameObject.SetActive(true);
             Debug.Log(leftPaddle.ToString());
             // Debug.Log("Player Side: " + playerSide.ToString());
         }
         else 
         {
-            playerSide = PaddleSide.Right;
+            // playerSide = PaddleSide.Right;
             rightPaddle.gameObject.SetActive(true);
             Debug.Log(rightPaddle.ToString());
             // Debug.Log("Player Side: " + playerSide.ToString());
