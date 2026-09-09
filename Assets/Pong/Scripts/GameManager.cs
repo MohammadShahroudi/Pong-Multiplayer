@@ -24,8 +24,8 @@ public class GameManager : NetworkBehaviour
     public int LeftPlayerScore => leftPlayerScore.Value;
     public int RightPlayerScore => rightPlayerScore.Value;
 
-    [SerializeField] Transform ball;
-    // [SerializeField] NetworkTransform ball;
+    // [SerializeField] Transform ball;
+    [SerializeField] NetworkTransform ball;
     [SerializeField] float startSpeed = 3f;
     [SerializeField] Vector3 startPosition = new(0f, 0.25f, 0f);
     [SerializeField] TextMeshProUGUI leftPlayerScoreText;
@@ -42,9 +42,8 @@ public class GameManager : NetworkBehaviour
         UpdateScore();
         StartGame();
     }*/
-
-    [Rpc(SendTo.Everyone)]
-    public void StartGameRpc()
+    
+    public void StartGame()
     {
         float direction = Random.value < 0.5f ? -1f : 1f;
         ResetBall(direction);
@@ -74,16 +73,17 @@ public class GameManager : NetworkBehaviour
             else
                 ResetBall(-1f);
         }
-        UpdateScoreRpc();
+        UpdateScore();
     }
     
-    [Rpc(SendTo.Everyone)]
-    public void UpdateScoreRpc()
+    // [Rpc(SendTo.Everyone)]
+    public void UpdateScore()
     {
         rightPlayerScoreText.text = _rightPlayerScore.ToString();
         leftPlayerScoreText.text = _leftPlayerScore.ToString();
     }
 
+    
     void ResetBall(float directionSign)
     {
         // if (ball == null) return;

@@ -20,6 +20,8 @@ public class SessionManager : NetworkBehaviour
     [SerializeField] Canvas sessionUI; 
     [SerializeField] Button startHostButton;
     [SerializeField] Button startClientButton;
+    [SerializeField] Paddle leftPaddle;
+    [SerializeField] Paddle rightPaddle;
 
     public bool IsConnected => NetworkManager!.IsClient || NetworkManager!.IsServer;
     public int PlayerCount => playerCount.Value;
@@ -38,10 +40,12 @@ public class SessionManager : NetworkBehaviour
     
     readonly NetworkVariable<int> playerCount = new();
     // private readonly NetworkVariable<PaddleSide> paddleSide = new();
+    // public bool HasSpawned => IsSpawned;
+    // public int SpawnSlot => spawnSlot.Value;
 
     private void Awake()
     {
-        PaddleSide playerSide;
+        // PaddleSide playerSide;
         // networkManager = FindObjectOfType<NetworkManager>();
         // host is assigned the left paddle
         // increment the player count by one
@@ -51,14 +55,8 @@ public class SessionManager : NetworkBehaviour
         {
             startHostButton.gameObject.SetActive(false);
             NetworkManager.StartHost();
+            AssignSpawnSlot();
             Debug.Log("Host Button clicked");
-            playerSide = PaddleSide.Left;
-            Debug.Log(
-                $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
-                $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
-            
-            if (!IsOwner) return;
-            playerCount.Value = NetworkManager.ConnectedClientsIds.Count;
         });
         
         // client is assigned the right paddle
@@ -70,24 +68,22 @@ public class SessionManager : NetworkBehaviour
         {
             // startClientButton.gameObject.SetActive(false);
             NetworkManager.StartClient();
+            AssignSpawnSlot();
             Debug.Log("Client Button clicked");
-            playerSide = PaddleSide.Right;
-            Debug.Log(
-                $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
-                $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
         });
     }
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (!IsServer) return;
+        // if (!IsServer) return;
         
         if (!IsOwner) return;
         
         name = $"Player {NetworkObject.OwnerClientId}";
         
         UpdatePlayerCount();
+        // AssignSpawnSlot();
         NetworkManager.OnConnectionEvent += HandleConnectionEvent;
     }
     
@@ -111,14 +107,19 @@ public class SessionManager : NetworkBehaviour
     {
         Debug.Assert(IsServer);
         UpdatePlayerCount();
+        // AssignSpawnSlot();
         Debug.Log("Player Value: " + playerCount.Value);
+        Debug.Log(
+            $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
+            $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
         
         if (playerCount.Value == 2)
         {
             Debug.Log("Both players have been connected!");
+            // AssignSpawnSlot();
             HideButtonRpc();
-            gameManager.StartGameRpc();
-            gameManager.UpdateScoreRpc();
+            gameManager.StartGame();
+            gameManager.UpdateScore();
         }
     }
 
@@ -132,5 +133,24 @@ public class SessionManager : NetworkBehaviour
     private void UpdatePlayerCount()
     {
         playerCount.Value = NetworkManager.ConnectedClientsIds.Count;
+    }
+
+    void AssignSpawnSlot()
+    {
+        PaddleSide playerSide;
+        if (IsHost)
+        {
+            playerSide = PaddleSide.Left;
+            leftPaddle.gameObject.SetActive(true);
+            Debug.Log(leftPaddle.ToString());
+            // Debug.Log("Player Side: " + playerSide.ToString());
+        }
+        else 
+        {
+            playerSide = PaddleSide.Right;
+            rightPaddle.gameObject.SetActive(true);
+            Debug.Log(rightPaddle.ToString());
+            // Debug.Log("Player Side: " + playerSide.ToString());
+        }
     }
 }
