@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,13 +19,15 @@ using UnityEngine.InputSystem;
  * prefab X if the table is centered at 0.
  */
 
-public class Paddle : MonoBehaviour
+public class Paddle : NetworkBehaviour
 {
     [SerializeField] PaddleSide side;
     [SerializeField] float minTravelZ;
     [SerializeField] float maxTravelZ;
     [SerializeField] float speed;
     [SerializeField] float collisionBallSpeedUp = 1.5f;
+    // [SerializeField] Paddle paddleSide;
+    // [SerializeField] GameObject paddle;
     
     // Local two-player needs separate keys per paddle. InputSystem_Actions
     // already has a Player/Paddle axis (W/S) for the one-owner step.
@@ -90,3 +93,34 @@ public class Paddle : MonoBehaviour
         other.rigidbody.linearVelocity = newVelocity;
     }
 }
+
+/*public override void OnNetworkSpawn()
+{
+    base.OnNetworkSpawn();
+        
+    PaddleControlRpc();
+}
+
+public override void OnNetworkDespawn()
+{
+    base.OnNetworkDespawn();
+}
+    
+[Rpc(SendTo.Server)]
+private void PaddleControlRpc()
+{
+    if (!IsServer)  return;
+    if (paddle.transform.position.x == LeftX)
+    {
+        Debug.Log("Paddle Left X");
+        side = PaddleSide.Left;
+        ApplySidePosition();
+    }
+    else if (paddle.transform.position.x == RightX)
+    {
+        Debug.Log("Paddle Right X");
+        side = PaddleSide.Right;
+        ApplySidePosition();
+        // paddle.gameObject.SetActive(true);
+    }
+}*/

@@ -20,8 +20,9 @@ public class SessionManager : NetworkBehaviour
     [SerializeField] Canvas sessionUI; 
     [SerializeField] Button startHostButton;
     [SerializeField] Button startClientButton;
+    // [SerializeField] PaddleSide leftPaddle;
+    // [SerializeField] PaddleSide rightPaddle;
     
-
     public bool IsConnected => NetworkManager!.IsClient || NetworkManager!.IsServer;
     public int PlayerCount => playerCount.Value;
 
@@ -38,16 +39,9 @@ public class SessionManager : NetworkBehaviour
     }
     
     readonly NetworkVariable<int> playerCount = new();
-    // private readonly NetworkVariable<PaddleSide> paddleSide = new();
-    // public bool HasSpawned => IsSpawned;
-    // public int SpawnSlot => spawnSlot.Value;
 
     private void Awake()
     {
-        // leftPaddle.gameObject.SetActive(false);
-        // rightPaddle.gameObject.SetActive(false);
-        // PaddleSide playerSide;
-        // networkManager = FindObjectOfType<NetworkManager>();
         // host is assigned the left paddle
         // increment the player count by one
         // After the host button is clicked then the 
@@ -56,8 +50,12 @@ public class SessionManager : NetworkBehaviour
         {
             startHostButton.gameObject.SetActive(false);
             NetworkManager.StartHost();
-            ActivatePaddles();
+            // leftPaddle = PaddleSide.Left;
             Debug.Log("Host Button clicked");
+            // Debug.Log("Left paddle Activated!");
+            Debug.Log(
+                $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
+                $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
         });
         
         // client is assigned the right paddle
@@ -69,8 +67,12 @@ public class SessionManager : NetworkBehaviour
         {
             // startClientButton.gameObject.SetActive(false);
             NetworkManager.StartClient();
-            ActivatePaddles();
+            // rightPaddle = PaddleSide.Right;
             Debug.Log("Client Button clicked");
+            // Debug.Log("Right paddle Activated!");
+            Debug.Log(
+                $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
+                $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
         });
     }
 
@@ -78,25 +80,18 @@ public class SessionManager : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
-        if (IsServer)
-        {
-            ActivatePaddles();
-        }
+        // if (!IsServer) return;
         
         if (!IsOwner) return;
         
         name = $"Player {NetworkObject.OwnerClientId}";
         
-        // UpdatePlayerCount();
-        // AssignSpawnSlot();
         NetworkManager.OnConnectionEvent += HandleConnectionEvent;
     }
     
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        
-        // Debug.Log($"[PlayerIdentity] {name} despawned");
         
         if (!NetworkManager!.IsServer) return;
         
@@ -106,23 +101,17 @@ public class SessionManager : NetworkBehaviour
     
     public void StartHost() => NetworkManager!.StartHost();
     public void StartClient() => NetworkManager!.StartClient();
-    // public void Disconnect() => NetworkManager!.Shutdown();
 
     private void HandleConnectionEvent(NetworkManager networkManager, ConnectionEventData eventData)
     {
         Debug.Assert(IsServer);
         UpdatePlayerCount();
-        // AssignSpawnSlot();
-        Debug.Log("Player Value: " + playerCount.Value);
-        Debug.Log(
-            $"[PlayerIdentity] {name} spawned | ownerClientId={NetworkObject.OwnerClientId} | " +
-            $"isOwner={IsOwner} | isServer={IsServer} | isClient={IsClient} | isHost={IsHost}");
+        Debug.Log("Player Value: " + playerCount.Value); 
         
         if (playerCount.Value == 2)
         {
             Debug.Log("Both players have been connected!");
-            // AssignSpawnSlot();
-            ActivatePaddles();
+            // ActivatePaddles();
             HideButtonRpc();
             gameManager.StartGame();
             gameManager.UpdateScore();
@@ -139,18 +128,5 @@ public class SessionManager : NetworkBehaviour
     private void UpdatePlayerCount()
     {
         playerCount.Value = NetworkManager.ConnectedClientsIds.Count;
-    }
-    
-    void ActivatePaddles()
-    {
-        // rightPaddle
-        if (IsHost)
-        {
-            Debug.Log("Paddle Activated!");
-        }
-        else
-        {
-            Debug.Log("Paddle 2 Activated!");
-        }
     }
 }

@@ -24,25 +24,17 @@ public class GameManager : NetworkBehaviour
     
     public int LeftPlayerScore => leftPlayerScore.Value;
     public int RightPlayerScore => rightPlayerScore.Value;
-
-    // [SerializeField] Transform ball;
+    
     [SerializeField] NetworkTransform ball;
     [SerializeField] float startSpeed = 3f;
     [SerializeField] Vector3 startPosition = new(0f, 0.25f, 0f);
     [SerializeField] TextMeshProUGUI leftPlayerScoreText;
     [SerializeField] TextMeshProUGUI rightPlayerScoreText;
-    // [SerializeField] NetworkObject ballPrefab;
     
     int _leftPlayerScore;
     int _rightPlayerScore;
 
     const int ScoreToWin = 11;
-
-    /*void Start()
-    {
-        UpdateScore();
-        StartGame();
-    }*/
     
     public void StartGame()
     {
@@ -96,10 +88,8 @@ public class GameManager : NetworkBehaviour
             else
                 ResetBall(-1f);
         }
-        // UpdateScore();
     }
     
-    // [Rpc(SendTo.Everyone)]
     public void UpdateScore()
     {
         rightPlayerScoreText.text = rightPlayerScore.Value.ToString();
@@ -109,7 +99,6 @@ public class GameManager : NetworkBehaviour
     void ResetBall(float directionSign)
     {
         if (!IsServer) return;
-        // if (ball == null) return;
         // Start the ball within 20 degrees off-center toward direction indicated by directionSign
         directionSign = Mathf.Sign(directionSign);
         Vector3 newVelocity = new Vector3(directionSign, 0f, 0f) * startSpeed;
@@ -121,7 +110,5 @@ public class GameManager : NetworkBehaviour
         ballRigidbody.angularVelocity = Vector3.zero;
         
         ball.GetComponent<NetworkTransform>().Teleport(startPosition, Quaternion.identity, ball.transform.localScale);
-        
-        // Debug.Log(getSca);
     }
 }
