@@ -26,8 +26,8 @@ public class Paddle : NetworkBehaviour
     [SerializeField] float maxTravelZ;
     [SerializeField] float speed;
     [SerializeField] float collisionBallSpeedUp = 1.5f;
-    // [SerializeField] Paddle paddleSide;
-    // [SerializeField] GameObject paddle;
+    [SerializeField] Paddle paddleSide;
+    [SerializeField] GameObject paddle;
     
     // Local two-player needs separate keys per paddle. InputSystem_Actions
     // already has a Player/Paddle axis (W/S) for the one-owner step.
@@ -92,35 +92,35 @@ public class Paddle : NetworkBehaviour
         Vector3 newVelocity = new Vector3(newSign * Mathf.Cos(newAngle), 0f, Mathf.Sin(newAngle)) * newSpeed;
         other.rigidbody.linearVelocity = newVelocity;
     }
-}
-
-/*public override void OnNetworkSpawn()
-{
-    base.OnNetworkSpawn();
-        
-    PaddleControlRpc();
-}
-
-public override void OnNetworkDespawn()
-{
-    base.OnNetworkDespawn();
-}
     
-[Rpc(SendTo.Server)]
-private void PaddleControlRpc()
-{
-    if (!IsServer)  return;
-    if (paddle.transform.position.x == LeftX)
+    public override void OnNetworkSpawn()
     {
-        Debug.Log("Paddle Left X");
-        side = PaddleSide.Left;
-        ApplySidePosition();
+        base.OnNetworkSpawn();
+        
+        PaddleControlRpc();
     }
-    else if (paddle.transform.position.x == RightX)
+
+    public override void OnNetworkDespawn()
     {
-        Debug.Log("Paddle Right X");
-        side = PaddleSide.Right;
-        ApplySidePosition();
-        // paddle.gameObject.SetActive(true);
+        base.OnNetworkDespawn();
     }
-}*/
+    
+    [Rpc(SendTo.Server)]
+    private void PaddleControlRpc()
+    {
+        if (!IsOwner) return;
+        if (paddle.transform.position.x == LeftX)
+        {
+            Debug.Log("Paddle Left X");
+            side = PaddleSide.Left;
+            ApplySidePosition();
+        }
+        else if (paddle.transform.position.x == RightX)
+        {
+            Debug.Log("Paddle Right X");
+            side = PaddleSide.Right;
+            ApplySidePosition();
+            // paddle.gameObject.SetActive(true);
+        }
+    }
+}
